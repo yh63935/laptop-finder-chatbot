@@ -4,6 +4,24 @@ const chatbotMessages = document.querySelector(".chatbot-messages");
 const options = document.querySelector(".options");
 const chatInput = document.querySelector(".chat-input textarea");
 const sendChatBtn = document.querySelector(".chat-input button");
+// Function to ask a question about desired laptop features and display options
+function askQuestion(question, optionsArray) {
+    // Clear prior options
+    options.innerHTML = "";
+
+    // Set question text
+    chatbotMessages.innerHTML = "<p>" + question + "</p>";
+
+    // Create buttons for options
+    optionsArray.forEach(option => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.addEventListener("click", () => {
+            // Handle option click event
+        });
+        options.appendChild(button);
+    });
+}
 
 // Need function to recommend products based on user input
 
