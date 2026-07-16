@@ -48,6 +48,7 @@ function getAnswer(questionId) {
     const answerEntry = userAnswers.find(entry => entry.questionId === questionId);
     return answerEntry ? answerEntry.answer : null;
 }
+
 // Function to score a laptop based on the user's selected options
 function getPurposeScore(laptop, purposeAnswer) {
     if (purposeAnswer === "Everyday Use") {
@@ -205,17 +206,17 @@ function handleAnswerSelection(answer) {
 
     addMessage(`You selected: ${answer}`);
 
-            userAnswers.push({
+    userAnswers.push({
         questionId: currentStep.id,
         answer
-            });
+    });
 
-            currentQuestionIndex += 1;
+    currentQuestionIndex += 1;
 
-            if (currentQuestionIndex < questions.length) {
-                askQuestion(questions[currentQuestionIndex]);
-            } else {
-                options.innerHTML = "";
+    if (currentQuestionIndex < questions.length) {
+        askQuestion(questions[currentQuestionIndex]);
+    } else {
+        options.innerHTML = "";
         addMessage("Thanks! I’ve gathered your preferences and I’m recommending a laptop.");
         showRecommendation();
     }
@@ -281,18 +282,26 @@ function send() {
 }
 
 function start() {
-    // Set initial message and clear prior options/history
-    chatbotMessages.innerHTML = "<p>Hi! I'm LaptopFinder Bot. Do you need help finding the right laptop?</p>";
+    chatbotMessages.innerHTML = "";
     options.innerHTML = "";
     chatInput.value = "";
     currentQuestionIndex = 0;
+    userAnswers.length = 0;
+    addMessage("Hi! I’m LaptopFinder Bot. Do you need help finding the right laptop?");
     askQuestion(questions[0]);
 }
 
-// Function to close the chatbot
 function closeChatbot() {
-    const chatbotContainer = document.querySelector(".chatbot-container");
+    const chatbotContainer = document.querySelector(".chat-container");
     chatbotContainer.style.display = "none";
 }
+
+sendChatBtn.addEventListener("click", send);
+chatInput.addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        send();
+    }
+});
 
 start();
