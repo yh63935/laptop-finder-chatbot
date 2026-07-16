@@ -139,6 +139,67 @@ function getExpectedFormat(questionId) {
 
     return "yes or no";
 }
+// Function to normalize user input for comparison
+// Accepted formats are case-insensitive and can include variations like "under 500", "less than 500", "over 1000", etc.
+function normalizeAnswer(questionId, rawValue) {
+    const value = rawValue.trim().toLowerCase();
+
+    if (questionId === "budget") {
+        if (value.includes("under") || value.includes("less than") || value.includes("<")) {
+            return "Under $500";
+        }
+
+        if (value.includes("over") || value.includes("above") || value.includes(">")) {
+            return "Over $1000";
+        }
+
+        if (value.includes("500-1000") || value.includes("500 to 1000") || value.includes("500-1000")) {
+            return "$500-$1000";
+        }
+
+        const numericValue = Number(value.replace(/[^0-9.]/g, ""));
+        if (!Number.isNaN(numericValue)) {
+            if (numericValue < 500) {
+                return "Under $500";
+            }
+
+            if (numericValue <= 1000) {
+                return "$500-$1000";
+            }
+
+            return "Over $1000";
+        }
+    }
+
+    if (questionId === "purpose") {
+        if (value.includes("school")) return "School";
+        if (value.includes("program")) return "Programming";
+        if (value.includes("game")) return "Gaming";
+        if (value.includes("video")) return "Video editing";
+        if (value.includes("everyday") || value.includes("daily")) return "Everyday Use";
+    }
+
+    if (questionId === "os") {
+        if (value.includes("windows")) return "Windows";
+        if (value.includes("mac")) return "macOS";
+        if (value.includes("linux")) return "Linux";
+        if (value.includes("no preference") || value.includes("preference")) return "No Preference";
+    }
+
+    if (questionId === "portability") {
+        if (value.includes("yes") || value.includes("important")) return "Yes";
+        if (value.includes("no")) return "No";
+    }
+
+    if (questionId === "help") {
+        if (value.includes("yes")) return "Yes";
+        if (value.includes("no")) return "No";
+    }
+
+    return null;
+}
+
+// Function to handle the user's answer selection
 function handleAnswerSelection(answer) {
     const currentStep = questions[currentQuestionIndex];
 
@@ -160,11 +221,65 @@ function handleAnswerSelection(answer) {
     }
 }
 
+function askQuestion(step) {
+    options.innerHTML = "";
+    addMessage(step.question);
+    addMessage("You can either click an option or type a short answer.");
+
+    step.options.forEach(option => {
+        const button = document.createElement("button");
+        button.textContent = option;
+        button.addEventListener("click", () => {
+            handleAnswerSelection(option);
+        });
+
         options.appendChild(button);
     });
 }
 
-// Function to initialize the chatbot
+function send() {
+    const rawInput = chatInput.value.trim();
+
+    if (!rawInput) {
+        addMessage("Please type a response or use one of the buttons.");
+        chatInput.value = "";
+        return;
+    }
+
+    const command = rawInput.toLowerCase();
+
+    if (["start over", "restart", "reset"].includes(command)) {
+        start();
+        return;
+    }
+
+    if (["help", "what can i type"].includes(command)) {
+        addMessage("You can use the buttons, or type short answers like 'school', 'windows', 'yes', 'no', or a budget such as '450' or '1200'.");
+        chatInput.value = "";
+        return;
+    }
+
+    const currentStep = questions[currentQuestionIndex];
+
+    if (!currentStep) {
+        addMessage("The conversation is already complete. Type 'start over' to begin again.");
+        chatInput.value = "";
+        return;
+    }
+
+    const normalizedAnswer = normalizeAnswer(currentStep.id, rawInput);
+
+    if (!normalizedAnswer) {
+        addMessage(`I didn’t understand that. Please try ${getExpectedFormat(currentStep.id)}.`);
+        chatInput.value = "";
+        return;
+    }
+
+    addMessage(`You typed: ${rawInput}`);
+    handleAnswerSelection(normalizedAnswer);
+    chatInput.value = "";
+}
+
 function start() {
     // Set initial message and clear prior options/history
     chatbotMessages.innerHTML = "<p>Hi! I'm LaptopFinder Bot. Do you need help finding the right laptop?</p>";
