@@ -4,6 +4,8 @@ const chatbotMessages = document.querySelector(".chatbot-messages");
 const options = document.querySelector(".options");
 const chatInput = document.querySelector(".chat-input textarea");
 const sendChatBtn = document.querySelector(".chat-input button");
+const chatContainer = document.querySelector(".chat-container");
+const openChatBtn = document.getElementById("open-chat-btn");
 
 const questions = [
     {
@@ -211,6 +213,12 @@ function handleAnswerSelection(answer) {
         answer
     });
 
+    if (currentStep.id === "help" && answer === "No") {
+        options.innerHTML = "";
+        addMessage("No worries! If you'd like to explore laptop recommendations, I'm here to help. Have a great day!");
+        return;
+    }
+
     currentQuestionIndex += 1;
 
     if (currentQuestionIndex < questions.length) {
@@ -219,6 +227,22 @@ function handleAnswerSelection(answer) {
         options.innerHTML = "";
         addMessage("Thanks! I’ve gathered your preferences and I’m recommending a laptop.");
         showRecommendation();
+        addMessage("Would you like another product recommendation?");
+
+        const followUpOptions = ["Yes", "No"];
+        followUpOptions.forEach(option => {
+            const button = document.createElement("button");
+            button.textContent = option;
+            button.addEventListener("click", () => {
+                if (option === "Yes") {
+                    start();
+                } else {
+                    options.innerHTML = "";
+                    addMessage("Thanks for using the chatbot. I hope I helped you find a laptop that suits your needs. If you want another recommendation, feel free to start a new search. Have a great day!");
+                }
+            });
+            options.appendChild(button);
+        });
     }
 }
 
@@ -291,9 +315,15 @@ function start() {
     askQuestion(questions[0]);
 }
 
+function openChatbot() {
+    chatContainer.style.display = "block";
+    openChatBtn.style.display = "none";
+    start();
+}
+
 function closeChatbot() {
-    const chatbotContainer = document.querySelector(".chat-container");
-    chatbotContainer.style.display = "none";
+    chatContainer.style.display = "none";
+    openChatBtn.style.display = "inline-block";
 }
 
 sendChatBtn.addEventListener("click", send);
