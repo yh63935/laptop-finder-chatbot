@@ -21,8 +21,7 @@ A simple web-based chatbot that helps users find a laptop based on their budget,
 ### Option 2
 1. Download repository files
 2. Simply open `index.html` in a modern web browser.
-   ```
-
+   
 ## Approach
 This project uses a lightweight front-end approach:
 - HTML provides the chat layout
