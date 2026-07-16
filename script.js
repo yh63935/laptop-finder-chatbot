@@ -311,7 +311,7 @@ function start() {
     chatInput.value = "";
     currentQuestionIndex = 0;
     userAnswers.length = 0;
-    addMessage("Hi! I’m LaptopFinder Bot. Do you need help finding the right laptop?");
+    addMessage("Hi! I’m LaptopFinder Bot. I can help you find the right laptop for your needs.");
     askQuestion(questions[0]);
 }
 
