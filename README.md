@@ -12,20 +12,15 @@ A simple web-based chatbot that helps users find a laptop based on their budget,
 - Restart and follow-up options for another recommendation
 
 ## Setup / Installation
-1. Clone the repository:
-   ```bash
-   git clone <your-repository-url>
-   ```
-2. Open the project folder in your editor.
-3. Start a local server so the files load correctly in the browser.
+### Option 1: Live Server
+1. Clone or download this repository.
+2. Open the project in Visual Studio Code.
+3. Install the "Live Server" extension if needed.
+4. Right-click `index.html` and select **Open with Live Server**.
 
-   Example with Python:
-   ```bash
-   python -m http.server 8000
-   ```
-4. Open your browser and go to:
-   ```text
-   http://localhost:8000
+### Option 2
+1. Download repository files
+2. Simply open `index.html` in a modern web browser.
    ```
 
 ## Approach
