@@ -30,7 +30,7 @@ This project uses a lightweight front-end approach:
 
 The recommendation logic is based on a simple scoring system that compares the user’s answers to laptop attributes such as budget, purpose, OS, and portability.
 
-The interface is intentionally simple and accessible, with a clear chat layout, easy-to-read buttons, and a basic option to close and reopen the chatbot when needed. Unexpected user inputs are handled by giving the user and error message specifying the expected format.
+The interface is simple and accessible, with a clear chat layout, easy-to-read buttons, and a basic option to close and reopen the chatbot when needed. Unexpected user inputs are handled by giving the user and error message specifying the expected format.
 
 ## Example Flow
 1. The chatbot asks whether the user wants help finding a laptop.
@@ -45,6 +45,8 @@ Example of the chatbot opening:
 
 <img width="672" height="633" alt="image" src="https://github.com/user-attachments/assets/c32ad4ce-4dc9-43c5-b807-c9a755c3db99" />
 
+Example when user does not want laptop recommendations:
+<img width="623" height="655" alt="image" src="https://github.com/user-attachments/assets/6f07eb5f-3e56-4d5a-b17a-8142140f99aa" />
 
 Example of preferences asked: 
 
@@ -66,5 +68,9 @@ Example of a recommendation:
 Example of asking if user wants another recommendation (and starting flow over)
 
 <img width="622" height="280" alt="image" src="https://github.com/user-attachments/assets/d635143e-abb9-40e0-8003-9145f45fff4a" />
+
+Example of closed chatbot:
+<img width="208" height="72" alt="image" src="https://github.com/user-attachments/assets/cb587560-4363-4c85-8e9a-05d5c7a9f097" />
+
 
 
