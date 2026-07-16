@@ -10,10 +10,10 @@
         <div class="chat-container">
             <header>
                 <h2>LaptopFinder Chatbot</h2>
-                <span alt="Close" id="cross" onclick="cancel()">X</span>
+                <span alt="Close" id="cross" onclick="closeChatbot()">X</span>
             </header>
             <div class="chatbot-messages">
-                <p>Hi! I'm LaptopFinder Bot. Do you need help finding the right laptop?</p>
+                <p>Hi! I'm LaptopFinder Bot. I can help you find the right laptop for your needs.</p>
             </div>
             <div class="options"></div>
             <div class="chat-input">
@@ -21,6 +21,7 @@
                 <button onclick="send()">Send</button>
             </div>
         </div>
+        <button id="open-chat-btn" class="open-chat-btn" type="button" onclick="openChatbot()">Open Chat</button>
         <script src="laptops.js"></script>
         <script src="script.js"></script>
     </body>
