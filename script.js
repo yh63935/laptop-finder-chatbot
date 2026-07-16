@@ -48,6 +48,97 @@ function getAnswer(questionId) {
     const answerEntry = userAnswers.find(entry => entry.questionId === questionId);
     return answerEntry ? answerEntry.answer : null;
 }
+// Function to score a laptop based on the user's selected options
+function getPurposeScore(laptop, purposeAnswer) {
+    if (purposeAnswer === "Everyday Use") {
+        return laptop.purpose.includes("School") || laptop.purpose.includes("Programming") ? 2 : 0;
+    }
+
+    return laptop.purpose.includes(purposeAnswer) ? 4 : 0;
+}
+
+// Function to score a laptop based on user answers
+function scoreLaptop(laptop, answers) {
+    let score = 0;
+    // Score based on budget, budget has the highest weight of 4 points
+    if (answers.budget === laptop.budget) {
+        score += 4;
+    }
+
+    score += getPurposeScore(laptop, answers.purpose);
+    // Score based on OS, weight of 3 points
+    if (answers.os === "No Preference" || answers.os === laptop.os) {
+        score += 3;
+    }
+    // Score based on portability, weight of 2 points
+    if (answers.portability === "Yes" && laptop.features.some(feature => /lightweight|portable/i.test(feature))) {
+        score += 2;
+    // Score based on portability, weight of 1 point for non-portable laptops with gaming/performance features
+    } else if (answers.portability === "No" && laptop.features.some(feature => /gaming|performance|powerful/i.test(feature))) {
+        score += 1;
+    }
+    return score;
+}
+
+// Function to get the best laptop recommendation based on user answers
+function getRecommendation(answers) {
+    if (!Array.isArray(laptops) || laptops.length === 0) {
+        return null;
+    }
+    // Score each laptop and sort by score in descending order
+    const scoredLaptops = laptops
+        .map(laptop => ({
+            laptop,
+            score: scoreLaptop(laptop, answers)
+        }))
+        .sort((a, b) => b.score - a.score || a.laptop.name.localeCompare(b.laptop.name));
+
+    return scoredLaptops[0];
+}
+
+// Function to show the recommended laptop based on user answers
+function showRecommendation() {
+    const answers = {
+        budget: getAnswer("budget"),
+        purpose: getAnswer("purpose"),
+        os: getAnswer("os"),
+        portability: getAnswer("portability")
+    };
+
+    const recommendation = getRecommendation(answers);
+
+    if (!recommendation) {
+        addMessage("I couldn’t find a matching laptop in the current list.");
+        return;
+    }
+
+    const { laptop } = recommendation;
+    addMessage(`Recommended laptop: ${laptop.name}`);
+    addMessage(`Why this one: ${laptop.reason}`);
+    addMessage(`Price: ${laptop.price}`);
+}
+
+
+// Function to get the expected format for user input based on the question
+function getExpectedFormat(questionId) {
+    if (questionId === "budget") {
+        return "a budget like 450, 800, or 'under 500'";
+    }
+
+    if (questionId === "purpose") {
+        return "school, programming, gaming, video editing, or everyday";
+    }
+
+    if (questionId === "os") {
+        return "windows, macos, linux, or no preference";
+    }
+
+    if (questionId === "portability") {
+        return "yes or no";
+    }
+
+    return "yes or no";
+}
 function handleAnswerSelection(answer) {
     const currentStep = questions[currentQuestionIndex];
 
@@ -64,10 +155,11 @@ function handleAnswerSelection(answer) {
                 askQuestion(questions[currentQuestionIndex]);
             } else {
                 options.innerHTML = "";
-                chatbotMessages.innerHTML += "<p>Thanks! I can now recommend a laptop based on your choices.</p>";
-                console.log("User answers:", userAnswers);
-            }
-        });
+        addMessage("Thanks! I’ve gathered your preferences and I’m recommending a laptop.");
+        showRecommendation();
+    }
+}
+
         options.appendChild(button);
     });
 }
